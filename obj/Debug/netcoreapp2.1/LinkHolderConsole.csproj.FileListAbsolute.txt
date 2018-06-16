@@ -1,0 +1,11 @@
+D:\current\github\LinkHolderConsole\bin\Debug\netcoreapp2.1\LinkHolderConsole.deps.json
+D:\current\github\LinkHolderConsole\bin\Debug\netcoreapp2.1\LinkHolderConsole.runtimeconfig.json
+D:\current\github\LinkHolderConsole\bin\Debug\netcoreapp2.1\LinkHolderConsole.runtimeconfig.dev.json
+D:\current\github\LinkHolderConsole\bin\Debug\netcoreapp2.1\LinkHolderConsole.dll
+D:\current\github\LinkHolderConsole\bin\Debug\netcoreapp2.1\LinkHolderConsole.pdb
+D:\current\github\LinkHolderConsole\obj\Debug\netcoreapp2.1\LinkHolderConsole.csprojAssemblyReference.cache
+D:\current\github\LinkHolderConsole\obj\Debug\netcoreapp2.1\LinkHolderConsole.csproj.CoreCompileInputs.cache
+D:\current\github\LinkHolderConsole\obj\Debug\netcoreapp2.1\LinkHolderConsole.AssemblyInfoInputs.cache
+D:\current\github\LinkHolderConsole\obj\Debug\netcoreapp2.1\LinkHolderConsole.AssemblyInfo.cs
+D:\current\github\LinkHolderConsole\obj\Debug\netcoreapp2.1\LinkHolderConsole.dll
+D:\current\github\LinkHolderConsole\obj\Debug\netcoreapp2.1\LinkHolderConsole.pdb

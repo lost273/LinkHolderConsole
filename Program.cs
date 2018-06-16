@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 namespace LinkHolderConsole
 {
     class Program {
-        private const string APP_PATH= "http://localhost:5000";
+        private const string APP_PATH= "http://localhost:5000/";
         private static string token;
         static void Main(string[] args) {
             Console.WriteLine("Введите логин:");
@@ -49,7 +49,7 @@ namespace LinkHolderConsole
             using (var client = new HttpClient())
             {
                 var response =
-                    client.PostAsync(APP_PATH + "/Token", content).Result;
+                    client.PostAsync(APP_PATH + "api/account/token", content).Result;
                 var result = response.Content.ReadAsStringAsync().Result;
                 // Десериализация полученного JSON-объекта
                 Dictionary<string, string> tokenDictionary =
