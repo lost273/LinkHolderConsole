@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using Newtonsoft.Json;
 
 namespace LinkHolderConsole
 {
     class Program {
-        private const string APP_PATH= "http://localhost:55122";
+        private const string APP_PATH= "http://localhost:5000";
         private static string token;
         static void Main(string[] args) {
             Console.WriteLine("Введите логин:");
@@ -11,10 +14,6 @@ namespace LinkHolderConsole
  
             Console.WriteLine("Введите пароль:");
             string password = Console.ReadLine();
- 
-            var registerResult = Register(userName, password);
- 
-            Console.WriteLine("Статусный код регистрации: {0}", registerResult);
  
             Dictionary<string, string> tokenDictionary = GetTokenDictionary(userName, password);
             token = tokenDictionary["access_token"];
@@ -35,21 +34,7 @@ namespace LinkHolderConsole
  
             Console.Read();
         }
-        // регистрация
-        static string Register(string email, string password)
-        {
-            var registerModel = new
-            {
-                Email = email,
-                Password = password,
-                ConfirmPassword = password
-            };
-            using (var client = new HttpClient())
-            {
-                var response = client.PostAsJsonAsync(APP_PATH + "/api/Account/Register", registerModel).Result;
-                return response.StatusCode.ToString();
-            }
-        }
+        
         // получение токена
         static Dictionary<string, string> GetTokenDictionary(string userName, string password)
         {
