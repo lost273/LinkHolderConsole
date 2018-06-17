@@ -65,7 +65,7 @@ namespace LinkHolderConsole
         // получаем информацию о клиенте 
         static string GetUserInfo(string token) {
             using (var client = CreateClient(token)) {
-                var response = client.GetAsync(APP_PATH + "/api/Account/UserInfo").Result;
+                var response = client.GetAsync(APP_PATH + "api/admin").Result;
                 return response.Content.ReadAsStringAsync().Result;
             }
         }
