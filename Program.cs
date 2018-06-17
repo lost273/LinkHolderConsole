@@ -9,16 +9,14 @@ namespace LinkHolderConsole
         private const string APP_PATH= "http://localhost:5000/";
         private static string token;
         static void Main(string[] args) {
-            Console.WriteLine("Введите логин:");
-            string userName = Console.ReadLine();
+            
+            string userName = "admin@example.com";
  
-            Console.WriteLine("Введите пароль:");
-            string password = Console.ReadLine();
+            string password = "Secret123$";
  
             Dictionary<string, string> tokenDictionary = GetTokenDictionary(userName, password);
             token = tokenDictionary["access_token"];
  
-            Console.WriteLine();
             Console.WriteLine("Access Token:");
             Console.WriteLine(token);
  
@@ -32,22 +30,18 @@ namespace LinkHolderConsole
             Console.WriteLine("Values:");
             Console.WriteLine(values);
  
-            Console.Read();
         }
         
         // получение токена
-        static Dictionary<string, string> GetTokenDictionary(string userName, string password)
-        {
-            var pairs = new List<KeyValuePair<string, string>>
-                {
+        static Dictionary<string, string> GetTokenDictionary(string userName, string password) {
+            var pairs = new List<KeyValuePair<string, string>> {
                     new KeyValuePair<string, string>( "grant_type", "password" ), 
                     new KeyValuePair<string, string>( "username", userName ), 
                     new KeyValuePair<string, string> ( "Password", password )
                 };
             var content = new FormUrlEncodedContent(pairs);
  
-            using (var client = new HttpClient())
-            {
+            using (var client = new HttpClient()) {
                 var response =
                     client.PostAsync(APP_PATH + "api/account/token", content).Result;
                 var result = response.Content.ReadAsStringAsync().Result;
@@ -59,11 +53,9 @@ namespace LinkHolderConsole
         }
  
         // создаем http-клиента с токеном 
-        static HttpClient CreateClient(string accessToken = "")
-        {
+        static HttpClient CreateClient(string accessToken = "") {
             var client = new HttpClient();
-            if (!string.IsNullOrWhiteSpace(accessToken))
-            {
+            if (!string.IsNullOrWhiteSpace(accessToken)) {
                 client.DefaultRequestHeaders.Authorization =
                     new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
             }
@@ -71,20 +63,16 @@ namespace LinkHolderConsole
         }
  
         // получаем информацию о клиенте 
-        static string GetUserInfo(string token)
-        {
-            using (var client = CreateClient(token))
-            {
+        static string GetUserInfo(string token) {
+            using (var client = CreateClient(token)) {
                 var response = client.GetAsync(APP_PATH + "/api/Account/UserInfo").Result;
                 return response.Content.ReadAsStringAsync().Result;
             }
         }
  
         // обращаемся по маршруту api/values 
-        static string GetValues(string token)
-        {
-            using (var client = CreateClient(token))
-            {
+        static string GetValues(string token) {
+            using (var client = CreateClient(token)) {
                 var response = client.GetAsync(APP_PATH + "/api/values").Result;
                 return response.Content.ReadAsStringAsync().Result;
             }
