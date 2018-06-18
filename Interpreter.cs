@@ -18,8 +18,15 @@ namespace LinkHolderConsole {
         public void CommandRun () {
             if(words[0].Equals("login")) {
                 token = commandDictionary["login"].Run();
+                if(token != null) {runStatus.Add("Login OK!");}
             } else {
-                commandDictionary[words[0]].Run();
+                String result = commandDictionary[words[0]].Run();
+                runStatus.Add(result);
+            }
+        }
+        public void ShowRunStatus(){
+            foreach(String s in runStatus){
+                Console.WriteLine(s);
             }
         }
     }

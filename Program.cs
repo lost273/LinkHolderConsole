@@ -2,8 +2,6 @@
 
 namespace LinkHolderConsole {
     class Program {
-        
-        private static string token;
         private static Interpreter interpreter;
         static void Main(string[] args) {
 
@@ -11,7 +9,7 @@ namespace LinkHolderConsole {
 
             interpreter = new Interpreter(Console.ReadLine());
             interpreter.CommandRun();
-            
+            interpreter.ShowRunStatus();
         }
     }
 }

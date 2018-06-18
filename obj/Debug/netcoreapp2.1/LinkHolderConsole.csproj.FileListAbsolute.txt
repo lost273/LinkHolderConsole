@@ -9,3 +9,14 @@ D:\current\github\LinkHolderConsole\obj\Debug\netcoreapp2.1\LinkHolderConsole.As
 D:\current\github\LinkHolderConsole\obj\Debug\netcoreapp2.1\LinkHolderConsole.AssemblyInfo.cs
 D:\current\github\LinkHolderConsole\obj\Debug\netcoreapp2.1\LinkHolderConsole.dll
 D:\current\github\LinkHolderConsole\obj\Debug\netcoreapp2.1\LinkHolderConsole.pdb
+D:\githublost273\LinkHolderConsole\bin\Debug\netcoreapp2.1\LinkHolderConsole.deps.json
+D:\githublost273\LinkHolderConsole\bin\Debug\netcoreapp2.1\LinkHolderConsole.runtimeconfig.json
+D:\githublost273\LinkHolderConsole\bin\Debug\netcoreapp2.1\LinkHolderConsole.runtimeconfig.dev.json
+D:\githublost273\LinkHolderConsole\bin\Debug\netcoreapp2.1\LinkHolderConsole.dll
+D:\githublost273\LinkHolderConsole\bin\Debug\netcoreapp2.1\LinkHolderConsole.pdb
+D:\githublost273\LinkHolderConsole\obj\Debug\netcoreapp2.1\LinkHolderConsole.csprojAssemblyReference.cache
+D:\githublost273\LinkHolderConsole\obj\Debug\netcoreapp2.1\LinkHolderConsole.csproj.CoreCompileInputs.cache
+D:\githublost273\LinkHolderConsole\obj\Debug\netcoreapp2.1\LinkHolderConsole.AssemblyInfoInputs.cache
+D:\githublost273\LinkHolderConsole\obj\Debug\netcoreapp2.1\LinkHolderConsole.AssemblyInfo.cs
+D:\githublost273\LinkHolderConsole\obj\Debug\netcoreapp2.1\LinkHolderConsole.dll
+D:\githublost273\LinkHolderConsole\obj\Debug\netcoreapp2.1\LinkHolderConsole.pdb
