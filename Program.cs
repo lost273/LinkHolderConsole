@@ -11,16 +11,13 @@ namespace LinkHolderConsole
         private static Interpreter interpreter;
         static void Main(string[] args) {
 
-            Console.WriteLine("Welcome, please enter the command.");
-            interpreter = new Interpreter(Console.ReadLine());
+            Console.WriteLine("Please enter the command.");
 
+            interpreter = new Interpreter(Console.ReadLine());
             interpreter.CommandRun();
             
-            string userName = "admin@example.com";
-            string password = "Secret123$";
- 
-            Dictionary<string, string> tokenDictionary = GetTokenDictionary(userName, password);
-            token = tokenDictionary["access_token"];
+           
+            
  
             Console.WriteLine("Access Token:");
             Console.WriteLine(token);
