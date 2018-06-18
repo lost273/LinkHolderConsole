@@ -8,10 +8,15 @@ namespace LinkHolderConsole
     class Program {
         private const string APP_PATH= "http://localhost:5000/";
         private static string token;
+        private static Interpreter interpreter;
         static void Main(string[] args) {
+
+            Console.WriteLine("Welcome, please enter the command.");
+            interpreter = new Interpreter(Console.ReadLine());
+
+            interpreter.CommandRun();
             
             string userName = "admin@example.com";
- 
             string password = "Secret123$";
  
             Dictionary<string, string> tokenDictionary = GetTokenDictionary(userName, password);
