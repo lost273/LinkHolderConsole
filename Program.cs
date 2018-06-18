@@ -2,14 +2,18 @@
 
 namespace LinkHolderConsole {
     class Program {
-        private static Interpreter interpreter;
         static void Main(string[] args) {
+            
+            Interpreter interpreter = new Interpreter();
+            String key = "";
 
-            Console.WriteLine("Please enter the command.");
-
-            interpreter = new Interpreter(Console.ReadLine());
-            interpreter.CommandRun();
-            interpreter.ShowRunStatus();
+            do {
+                Console.WriteLine("Please enter the command.");
+                key = interpreter.ReadEnter(Console.ReadLine());
+                interpreter.CommandRun();
+                interpreter.ShowRunStatus();
+                interpreter = new Interpreter();
+            } while(!key.Equals("exit"));
         }
     }
 }

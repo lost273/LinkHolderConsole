@@ -5,11 +5,20 @@ using Newtonsoft.Json;
 
 namespace LinkHolderConsole {
     internal abstract class Commands {
-        public abstract String Run();
+        public abstract String Run(String token);
         public const string APP_PATH= "http://localhost:5000/";
+        public HttpClient CreateClient(string accessToken = "") {
+            var client = new HttpClient();
+            if (!string.IsNullOrWhiteSpace(accessToken)) {
+                client.DefaultRequestHeaders.Authorization =
+                        new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
+            }
+            return client;
+        }
+
     }
     internal sealed class Login : Commands {
-        public override String Run() {
+        public override String Run(String token) {
             //Console.WriteLine("Enter the email:");
             String userName = "admin@example.com";
             //Console.WriteLine("Enter the password:");
@@ -26,7 +35,7 @@ namespace LinkHolderConsole {
     
             using (var client = new HttpClient()) {
                 var response =
-                    client.PostAsync(Commands.APP_PATH + "api/account/token", content).Result;
+                    client.PostAsync(APP_PATH + "api/account/token", content).Result;
                 var result = response.Content.ReadAsStringAsync().Result;
                 
                 Dictionary<string, string> tokenDictionary =
@@ -36,35 +45,21 @@ namespace LinkHolderConsole {
         }
     }
     internal sealed class Register : Commands {
-        public override String Run(){
+        public override String Run(String token) {
             return "OK";
         }
     }
-    
-    
-            // создаем http-клиента с токеном 
-            // static HttpClient CreateClient(string accessToken = "") {
-            //     var client = new HttpClient();
-            //     if (!string.IsNullOrWhiteSpace(accessToken)) {
-            //         client.DefaultRequestHeaders.Authorization =
-            //             new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
-            //     }
-            //     return client;
-            // }
-    
-            // получаем информацию о клиенте 
-            // static string GetUserInfo(string token) {
-            //     using (var client = CreateClient(token)) {
-            //         var response = client.GetAsync(APP_PATH + "api/admin").Result;
-            //         return response.Content.ReadAsStringAsync().Result;
-            //     }
-            // }
-    
-            // обращаемся по маршруту api/values 
-            // static string GetValues(string token) {
-            //     using (var client = CreateClient(token)) {
-            //         var response = client.GetAsync(APP_PATH + "/api/values").Result;
-            //         return response.Content.ReadAsStringAsync().Result;
-            //     }
-            // }
+    internal sealed class Value : Commands {
+        public override String Run(String token) {
+            using (var client = CreateClient(token)) {
+                var response = client.GetAsync(APP_PATH + "api/roleadmin").Result;
+                return response.Content.ReadAsStringAsync().Result;
+            }
+        }
+    }
+     internal sealed class Exit : Commands {
+        public override String Run(String token) {
+           return "exit";
+        }
+    }
 }

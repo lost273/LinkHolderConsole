@@ -6,21 +6,26 @@ namespace LinkHolderConsole {
         private String[] words;
         private Dictionary<String, Commands> commandDictionary;
         private List<String> runStatus;
-        private String token;
-        public Interpreter(String message) {
-            words = message.Split(new Char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+        private static String token;
+        public Interpreter() {
             commandDictionary = new Dictionary<String, Commands> {
                 {"register", new Register()},
-                {"login", new Login()}
+                {"login", new Login()},
+                {"value", new Value()},
+                {"exit", new Exit()}
             };
             runStatus = new List<string>();
         }
+        public String ReadEnter(String message) {
+            words = message.Split(new Char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            return words[0];
+        }
         public void CommandRun () {
             if(words[0].Equals("login")) {
-                token = commandDictionary["login"].Run();
+                token = commandDictionary["login"].Run("");
                 if(token != null) {runStatus.Add("Login OK!");}
             } else {
-                String result = commandDictionary[words[0]].Run();
+                String result = commandDictionary[words[0]].Run(token);
                 runStatus.Add(result);
             }
         }
