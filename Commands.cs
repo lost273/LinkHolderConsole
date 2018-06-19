@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using Newtonsoft.Json;
 
 namespace LinkHolderConsole {
@@ -25,7 +26,7 @@ namespace LinkHolderConsole {
             //Console.WriteLine("Enter the email:");
             String userName = "admin@example.com";
             //Console.WriteLine("Enter the password:");
-            String password = "1";
+            String password = "Secret123$";
             return GetToken(userName, password);
         }
         private String GetToken(string userName, string password) {
@@ -39,20 +40,34 @@ namespace LinkHolderConsole {
             using (var client = new HttpClient()) {
                 var response =
                     client.PostAsync(APP_PATH + "api/account/token", content).Result;
-                ShowResult(password);
-                ShowResult($"Login result -> {response.StatusCode.ToString()}");
+
+                ShowResult($"Login result -> {response.Content.ReadAsStringAsync().Result}");
                 var result = response.Content.ReadAsStringAsync().Result;
                 
                 Dictionary<string, string> tokenDictionary =
                     JsonConvert.DeserializeObject<Dictionary<string, string>>(result);
-                ShowResult($"{tokenDictionary["access_token"]}");
                 return tokenDictionary["access_token"];
             }
         }
     }
     internal sealed class Register : Commands {
         public override String Run(String token) {
-            return "OK";
+            CreateUserModel user = new CreateUserModel();
+            Console.Write("Name: ");
+            user.Name = Console.ReadLine();
+            Console.Write("Email: ");
+            user.Email = Console.ReadLine();
+            Console.Write("Password: ");
+            user.Password = Console.ReadLine();
+            using (var client = CreateClient()) {
+                var dataAsString = JsonConvert.SerializeObject(user);
+                var content = new StringContent(dataAsString);
+                content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+                var response = client.PostAsync(APP_PATH + "api/account/register",content).Result;
+                //return response.Content.ReadAsStringAsync().Result;
+                ShowResult($"Register result -> {response.Content.ReadAsStringAsync().Result}");
+            }
+            return "";
         }
     }
     internal sealed class Value : Commands {
