@@ -64,16 +64,27 @@ namespace LinkHolderConsole {
                 var content = new StringContent(dataAsString);
                 content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
                 var response = client.PostAsync(APP_PATH + "api/account/register",content).Result;
-                //return response.Content.ReadAsStringAsync().Result;
                 ShowResult($"Register result -> {response.Content.ReadAsStringAsync().Result}");
             }
             return "";
         }
     }
-    internal sealed class Value : Commands {
+    internal sealed class GetValue : Commands {
         public override String Run(String token) {
             using (var client = CreateClient(token)) {
-                var response = client.GetAsync(APP_PATH + "api/roleadmin").Result;
+                var response = client.GetAsync(APP_PATH + "api/values").Result;
+                ShowResult($"Value result -> {response.Content.ReadAsStringAsync().Result}");
+                return response.Content.ReadAsStringAsync().Result;
+            }
+        }
+    }
+    internal sealed class DeleteValue : Commands {
+        public override String Run(String token) {
+            Console.Write("Id: ");
+            String id = Console.ReadLine();
+            using (var client = CreateClient(token)) {
+                var response = client.DeleteAsync(APP_PATH + "api/values/link/" + id).Result;
+                ShowResult($"Value result -> {response.Content.ReadAsStringAsync().Result}");
                 return response.Content.ReadAsStringAsync().Result;
             }
         }

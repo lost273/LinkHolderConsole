@@ -10,7 +10,8 @@ namespace LinkHolderConsole {
             commandDictionary = new Dictionary<String, Commands> {
                 {"register", new Register()},
                 {"login", new Login()},
-                {"value", new Value()},
+                {"value", new GetValue()},
+                {"delete-value", new DeleteValue()},
                 {"exit", new Exit()}
             };
         }
