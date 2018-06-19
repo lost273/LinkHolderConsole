@@ -15,6 +15,9 @@ namespace LinkHolderConsole {
             }
             return client;
         }
+        protected void ShowResult(String result){
+            Console.WriteLine(result);
+        }
 
     }
     internal sealed class Login : Commands {
@@ -22,10 +25,10 @@ namespace LinkHolderConsole {
             //Console.WriteLine("Enter the email:");
             String userName = "admin@example.com";
             //Console.WriteLine("Enter the password:");
-            String password = "Secret123$";
-            return GetTokenDictionary(userName, password)["access_token"];
+            String password = "1";
+            return GetToken(userName, password);
         }
-        static Dictionary<string, string> GetTokenDictionary(string userName, string password) {
+        private String GetToken(string userName, string password) {
             var pairs = new List<KeyValuePair<string, string>> {
                         new KeyValuePair<string, string>( "grant_type", "password" ), 
                         new KeyValuePair<string, string>( "username", userName ), 
@@ -36,11 +39,14 @@ namespace LinkHolderConsole {
             using (var client = new HttpClient()) {
                 var response =
                     client.PostAsync(APP_PATH + "api/account/token", content).Result;
+                ShowResult(password);
+                ShowResult($"Login result -> {response.StatusCode.ToString()}");
                 var result = response.Content.ReadAsStringAsync().Result;
                 
                 Dictionary<string, string> tokenDictionary =
                     JsonConvert.DeserializeObject<Dictionary<string, string>>(result);
-                return tokenDictionary;
+                ShowResult($"{tokenDictionary["access_token"]}");
+                return tokenDictionary["access_token"];
             }
         }
     }

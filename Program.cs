@@ -11,9 +11,7 @@ namespace LinkHolderConsole {
                 Console.WriteLine("Please enter the command.");
                 key = interpreter.ReadEnter(Console.ReadLine());
                 interpreter.CommandRun();
-                interpreter.ShowRunStatus();
-                interpreter = new Interpreter();
-            } while(!key.Equals("exit"));
+            } while (!key.Equals("exit"));
         }
     }
 }
