@@ -25,8 +25,9 @@ namespace LinkHolderConsole {
                 Console.WriteLine("List of the commands:");
                 Console.ForegroundColor = ConsoleColor.DarkGreen;
                 foreach(KeyValuePair<String, Commands> p in commandDictionary){
-                    Console.WriteLine($"{p.Key}");
+                    Console.Write($"/ {p.Key} ");
                 }
+                Console.WriteLine();
                 Console.ForegroundColor = ConsoleColor.White;
                 return;
             }

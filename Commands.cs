@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using LinkHolderConsole.Models;
 using Newtonsoft.Json;
 
 namespace LinkHolderConsole {
@@ -73,9 +74,15 @@ namespace LinkHolderConsole {
         public override String Run(String token) {
             using (var client = CreateClient(token)) {
                 var response = client.GetAsync(APP_PATH + "api/values").Result;
-                ShowResult($"Value result -> {response.Content.ReadAsStringAsync().Result}");
+                var content = response.Content.ReadAsStringAsync().Result;
+                IEnumerable<ViewFolderModel> folder = 
+                    JsonConvert.DeserializeObject<IEnumerable<ViewFolderModel>>(content);
+                ShowFolder(folder);
                 return response.Content.ReadAsStringAsync().Result;
             }
+        }
+        private void ShowFolder(IEnumerable<ViewFolderModel> folder){
+            
         }
     }
     internal sealed class DeleteValue : Commands {
