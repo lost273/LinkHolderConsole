@@ -89,7 +89,7 @@ namespace LinkHolderConsole {
             }
         }
     }
-     internal sealed class Exit : Commands {
+    internal sealed class Exit : Commands {
         public override String Run(String token) {
            return "exit";
         }

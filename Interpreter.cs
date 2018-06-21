@@ -20,6 +20,17 @@ namespace LinkHolderConsole {
             return words[0];
         }
         public void CommandRun () {
+            if(words[0].Equals("help")) {
+                Console.WriteLine("List of the commands:");
+                foreach(KeyValuePair<String, Commands> p in commandDictionary){
+                    Console.WriteLine($"{p.Key}");
+                }
+                return;
+            }
+            if(!commandDictionary.ContainsKey(words[0])) {
+                Console.WriteLine("We don't have this command yet.");
+                return;
+            }
             if(words[0].Equals("login")) {
                 token = commandDictionary["login"].Run("");
             } else {
