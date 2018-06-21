@@ -82,7 +82,16 @@ namespace LinkHolderConsole {
             }
         }
         private void ShowFolder(IEnumerable<ViewFolderModel> folder){
-            
+            foreach(ViewFolderModel f in folder){
+                Console.WriteLine("============================");
+                Console.WriteLine($"FOLDER(id - {f.Id})\t[{f.Name}]");
+                Console.WriteLine("============================");
+                foreach(ViewLinkModel l in f.MyLinks){
+                    Console.WriteLine($"LINK(id - {l.Id})\t{l.Body}");
+                    Console.WriteLine($"DESCRIPTION\t{l.Description}");
+                    Console.WriteLine("----------------------------");
+                }
+            }
         }
     }
     internal sealed class DeleteValue : Commands {

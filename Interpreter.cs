@@ -28,13 +28,13 @@ namespace LinkHolderConsole {
                     Console.Write($"/ {p.Key} ");
                 }
                 Console.WriteLine();
-                Console.ForegroundColor = ConsoleColor.White;
+                Console.ResetColor();
                 return;
             }
             if(!commandDictionary.ContainsKey(words[0])) {
                 Console.ForegroundColor = ConsoleColor.DarkRed;
                 Console.WriteLine("We don't have this command yet.");
-                Console.ForegroundColor = ConsoleColor.White;
+                Console.ResetColor();
                 return;
             }
             if(words[0].Equals("login")) {
