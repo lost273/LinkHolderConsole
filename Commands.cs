@@ -18,7 +18,13 @@ namespace LinkHolderConsole {
             return client;
         }
         protected void ShowResult(String result){
+            if(result.IndexOf(" successfully ") == -1) {
+                Console.ForegroundColor = ConsoleColor.DarkRed;
+            } else {
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
+            }
             Console.WriteLine(result);
+            Console.ResetColor();
         }
 
     }
@@ -85,11 +91,11 @@ namespace LinkHolderConsole {
             foreach(ViewFolderModel f in folder){
                 Console.ForegroundColor = ConsoleColor.DarkYellow;
                 Console.WriteLine("============================");
-                Console.WriteLine($"FOLDER(id - {f.Id})\t[{f.Name}]");
+                Console.WriteLine($"FOLDER(id-{f.Id})\t[{f.Name}]");
                 Console.WriteLine("============================");
                 foreach(ViewLinkModel l in f.MyLinks){
                     Console.ForegroundColor = ConsoleColor.DarkGreen;
-                    Console.WriteLine($"LINK(id - {l.Id})\t{l.Body}");
+                    Console.WriteLine($"LINK(id-{l.Id})\t{l.Body}");
                     Console.WriteLine($"DESCRIPTION\t{l.Description}");
                     Console.WriteLine("----------------------------");
                 }
@@ -111,17 +117,28 @@ namespace LinkHolderConsole {
                 var content = new StringContent(dataAsString);
                 content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
                 var response = client.PostAsync(APP_PATH + "api/values", content).Result;
-                //ShowResult($"Register result -> {response.Content.ReadAsStringAsync().Result}");
+                ShowResult($"SaveLink result -> {response.Content.ReadAsStringAsync().Result}");
             }
             return "";
         }
     }
-    internal sealed class DeleteValue : Commands {
+    internal sealed class DeleteLink : Commands {
         public override String Run(String token) {
             Console.Write("Id: ");
             String id = Console.ReadLine();
             using (var client = CreateClient(token)) {
                 var response = client.DeleteAsync(APP_PATH + "api/values/link/" + id).Result;
+                ShowResult($"Value result -> {response.Content.ReadAsStringAsync().Result}");
+                return response.Content.ReadAsStringAsync().Result;
+            }
+        }
+    }
+    internal sealed class DeleteFolder : Commands {
+        public override String Run(String token) {
+            Console.Write("Id: ");
+            String id = Console.ReadLine();
+            using (var client = CreateClient(token)) {
+                var response = client.DeleteAsync(APP_PATH + "api/values/folder/" + id).Result;
                 ShowResult($"Value result -> {response.Content.ReadAsStringAsync().Result}");
                 return response.Content.ReadAsStringAsync().Result;
             }

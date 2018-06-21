@@ -12,7 +12,8 @@ namespace LinkHolderConsole {
                 {"login", new Login()},
                 {"value", new GetValue()},
                 {"save-link", new SaveLink()},
-                {"delete-value", new DeleteValue()},
+                {"delete-link", new DeleteLink()},
+                {"delete-folder", new DeleteFolder()},
                 {"exit", new Exit()}
             };
         }
