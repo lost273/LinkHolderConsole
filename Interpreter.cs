@@ -21,14 +21,19 @@ namespace LinkHolderConsole {
         }
         public void CommandRun () {
             if(words[0].Equals("help")) {
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
                 Console.WriteLine("List of the commands:");
+                Console.ForegroundColor = ConsoleColor.DarkGreen;
                 foreach(KeyValuePair<String, Commands> p in commandDictionary){
                     Console.WriteLine($"{p.Key}");
                 }
+                Console.ForegroundColor = ConsoleColor.White;
                 return;
             }
             if(!commandDictionary.ContainsKey(words[0])) {
+                Console.ForegroundColor = ConsoleColor.DarkRed;
                 Console.WriteLine("We don't have this command yet.");
+                Console.ForegroundColor = ConsoleColor.White;
                 return;
             }
             if(words[0].Equals("login")) {
