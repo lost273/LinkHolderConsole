@@ -83,15 +83,37 @@ namespace LinkHolderConsole {
         }
         private void ShowFolder(IEnumerable<ViewFolderModel> folder){
             foreach(ViewFolderModel f in folder){
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
                 Console.WriteLine("============================");
                 Console.WriteLine($"FOLDER(id - {f.Id})\t[{f.Name}]");
                 Console.WriteLine("============================");
                 foreach(ViewLinkModel l in f.MyLinks){
+                    Console.ForegroundColor = ConsoleColor.DarkGreen;
                     Console.WriteLine($"LINK(id - {l.Id})\t{l.Body}");
                     Console.WriteLine($"DESCRIPTION\t{l.Description}");
                     Console.WriteLine("----------------------------");
                 }
             }
+            Console.ResetColor();
+        }
+    }
+    internal sealed class SaveLink : Commands {
+        public override String Run(string token) {
+            SaveLinkModel link = new SaveLinkModel();
+            Console.Write("Body: ");
+            link.LinkBody = Console.ReadLine();
+            Console.Write("Description: ");
+            link.LinkDescription = Console.ReadLine();
+            Console.Write("Folder Name: ");
+            link.FolderName = Console.ReadLine();
+            using (var client = CreateClient(token)) {
+                var dataAsString = JsonConvert.SerializeObject(link);
+                var content = new StringContent(dataAsString);
+                content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+                var response = client.PostAsync(APP_PATH + "api/values", content).Result;
+                //ShowResult($"Register result -> {response.Content.ReadAsStringAsync().Result}");
+            }
+            return "";
         }
     }
     internal sealed class DeleteValue : Commands {
