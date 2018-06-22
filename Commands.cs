@@ -170,7 +170,8 @@ namespace LinkHolderConsole {
             Console.Write("Name: ");
             String name = Console.ReadLine();
             using (var client = CreateClient(token)) {
-                var content = new StringContent(name);
+                var dataAsString = JsonConvert.SerializeObject(name);
+                var content = new StringContent(dataAsString);
                 content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
                 var response = client.PutAsync(APP_PATH + "api/values/folder/" + id, content).Result;
                 ShowResult($"ChangeFolder result -> {response.Content.ReadAsStringAsync().Result}");
