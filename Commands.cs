@@ -31,7 +31,7 @@ namespace LinkHolderConsole {
     internal sealed class Login : Commands {
         public override String Run(String token) {
             //Console.WriteLine("Enter the email:");
-            String userName = "admin@example.com";
+            String userName = "bob@example.com";
             //Console.WriteLine("Enter the password:");
             String password = "Secret123$";
             return GetToken(userName, password);
@@ -81,6 +81,10 @@ namespace LinkHolderConsole {
             using (var client = CreateClient(token)) {
                 var response = client.GetAsync(APP_PATH + "api/values").Result;
                 var content = response.Content.ReadAsStringAsync().Result;
+                if(!response.IsSuccessStatusCode) {
+                    ShowResult($"Service is not accessible for you!");
+                    return "";
+                }
                 IEnumerable<ViewFolderModel> folder = 
                     JsonConvert.DeserializeObject<IEnumerable<ViewFolderModel>>(content);
                 ShowFolder(folder);
