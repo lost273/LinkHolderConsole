@@ -11,9 +11,11 @@ namespace LinkHolderConsole {
                 {"register", new Register()},
                 {"login", new Login()},
                 {"value", new GetValue()},
-                {"save-link", new SaveLink()},
-                {"delete-link", new DeleteLink()},
-                {"delete-folder", new DeleteFolder()},
+                {"lsave", new SaveLink()},
+                {"ldelete", new DeleteLink()},
+                {"fdelete", new DeleteFolder()},
+                {"lchange", new ChangeLink()},
+                {"fchange", new ChangeFolder()},
                 {"exit", new Exit()}
             };
         }

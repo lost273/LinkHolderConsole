@@ -144,6 +144,40 @@ namespace LinkHolderConsole {
             }
         }
     }
+    internal sealed class ChangeLink : Commands {
+        public override String Run(String token) {
+            SaveLinkModel link = new SaveLinkModel();
+            Console.Write("Id: ");
+            String id = Console.ReadLine();
+            Console.Write("Body: ");
+            link.LinkBody = Console.ReadLine();
+            Console.Write("Description: ");
+            link.LinkDescription = Console.ReadLine();
+            using (var client = CreateClient(token)) {
+                var dataAsString = JsonConvert.SerializeObject(link);
+                var content = new StringContent(dataAsString);
+                content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+                var response = client.PutAsync(APP_PATH + "api/values/link/" + id, content).Result;
+                ShowResult($"ChangeLink result -> {response.Content.ReadAsStringAsync().Result}");
+            }
+            return "";
+        }
+    }
+    internal sealed class ChangeFolder : Commands {
+        public override String Run(String token) {
+            Console.Write("Id: ");
+            String id = Console.ReadLine();
+            Console.Write("Name: ");
+            String name = Console.ReadLine();
+            using (var client = CreateClient(token)) {
+                var content = new StringContent(name);
+                content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+                var response = client.PutAsync(APP_PATH + "api/values/folder/" + id, content).Result;
+                ShowResult($"ChangeFolder result -> {response.Content.ReadAsStringAsync().Result}");
+            }
+            return "";
+        }
+    }
     internal sealed class Exit : Commands {
         public override String Run(String token) {
            return "exit";
