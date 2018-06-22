@@ -16,6 +16,7 @@ namespace LinkHolderConsole {
                 {"fdelete", new DeleteFolder()},
                 {"lchange", new ChangeLink()},
                 {"fchange", new ChangeFolder()},
+                {"ushow", new ShowUsers()},
                 {"exit", new Exit()}
             };
         }

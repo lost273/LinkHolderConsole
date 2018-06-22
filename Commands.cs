@@ -179,6 +179,30 @@ namespace LinkHolderConsole {
             return "";
         }
     }
+    internal sealed class ShowUsers : Commands {
+        public override String Run(String token) {
+            using (var client = CreateClient(token)) {
+                var response = client.GetAsync(APP_PATH + "api/admin").Result;
+                var content = response.Content.ReadAsStringAsync().Result;
+                IEnumerable<ViewUserModel> users = 
+                    JsonConvert.DeserializeObject<IEnumerable<ViewUserModel>>(content);
+                ShowUser(users);
+                return response.Content.ReadAsStringAsync().Result;
+            }
+        }
+        private void ShowUser(IEnumerable<ViewUserModel> users) {
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.WriteLine("=============================================================");
+            Console.WriteLine($"ID\t\t\t\t\tNAME\tEMAIL");
+            Console.WriteLine("=============================================================");
+            foreach(ViewUserModel u in users) {
+                Console.ForegroundColor = ConsoleColor.DarkGreen;
+                Console.WriteLine($"{u.Id}\t{u.Name}\t{u.Email}");
+                Console.WriteLine("----------------------------");
+            }
+            Console.ResetColor();
+        }
+    }
     internal sealed class Exit : Commands {
         public override String Run(String token) {
            return "exit";
