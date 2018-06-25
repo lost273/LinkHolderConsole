@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using LinkHolderConsole.Models;
@@ -26,7 +27,19 @@ namespace LinkHolderConsole {
             Console.WriteLine(result);
             Console.ResetColor();
         }
-
+        protected void ShowHttpStatus(HttpStatusCode status){
+            switch(status){
+                case HttpStatusCode.Unauthorized : 
+                    ShowResult("Please login! (Unauthorized)");
+                break;
+                case HttpStatusCode.Forbidden :
+                    ShowResult("Access denied! (Forbidden)");
+                break;
+                default : 
+                    ShowResult(status.ToString());
+                break;
+            } 
+        }
     }
     internal sealed class Login : Commands {
         public override String Run(String token) {
@@ -48,11 +61,12 @@ namespace LinkHolderConsole {
                 var response =
                     client.PostAsync(APP_PATH + "api/account/token", content).Result;
 
-                ShowResult($"Login result -> {response.Content.ReadAsStringAsync().Result}");
                 var result = response.Content.ReadAsStringAsync().Result;
+                ShowHttpStatus(response.StatusCode);
                 
                 Dictionary<string, string> tokenDictionary =
                     JsonConvert.DeserializeObject<Dictionary<string, string>>(result);
+                ShowResult($"You are successfully logged in as {tokenDictionary["username"]}");
                 return tokenDictionary["access_token"];
             }
         }
@@ -82,7 +96,7 @@ namespace LinkHolderConsole {
                 var response = client.GetAsync(APP_PATH + "api/values").Result;
                 var content = response.Content.ReadAsStringAsync().Result;
                 if(!response.IsSuccessStatusCode) {
-                    ShowResult($"Service is not accessible for you!");
+                    ShowHttpStatus(response.StatusCode);
                     return "";
                 }
                 IEnumerable<ViewFolderModel> folder = 
