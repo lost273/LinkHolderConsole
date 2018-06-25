@@ -98,12 +98,11 @@ namespace LinkHolderConsole {
                 var response = client.GetAsync(APP_PATH + "api/values").Result;
                 var content = response.Content.ReadAsStringAsync().Result;
                 ShowHttpStatus(response.StatusCode);
-                if(!response.IsSuccessStatusCode) {
-                    return;
-                }
-                IEnumerable<ViewFolderModel> folder = 
+                if(response.IsSuccessStatusCode) {
+                    IEnumerable<ViewFolderModel> folder = 
                     JsonConvert.DeserializeObject<IEnumerable<ViewFolderModel>>(content);
-                ShowFolder(folder);
+                    ShowFolder(folder);
+                }
             }
         }
         private void ShowFolder(IEnumerable<ViewFolderModel> folder){
@@ -136,7 +135,7 @@ namespace LinkHolderConsole {
                 var content = new StringContent(dataAsString);
                 content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
                 var response = client.PostAsync(APP_PATH + "api/values", content).Result;
-                ShowResult($"SaveLink result -> {response.Content.ReadAsStringAsync().Result}");
+                ShowHttpStatus(response.StatusCode);
             }
         }
     }
@@ -146,7 +145,7 @@ namespace LinkHolderConsole {
             String id = Console.ReadLine();
             using (var client = CreateClient(Commands.Token)) {
                 var response = client.DeleteAsync(APP_PATH + "api/values/link/" + id).Result;
-                ShowResult($"Value result -> {response.Content.ReadAsStringAsync().Result}");
+                ShowHttpStatus(response.StatusCode);
             }
         }
     }
@@ -156,7 +155,7 @@ namespace LinkHolderConsole {
             String id = Console.ReadLine();
             using (var client = CreateClient(Commands.Token)) {
                 var response = client.DeleteAsync(APP_PATH + "api/values/folder/" + id).Result;
-                ShowResult($"Value result -> {response.Content.ReadAsStringAsync().Result}");
+                ShowHttpStatus(response.StatusCode);
             }
         }
     }
@@ -174,7 +173,7 @@ namespace LinkHolderConsole {
                 var content = new StringContent(dataAsString);
                 content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
                 var response = client.PutAsync(APP_PATH + "api/values/link/" + id, content).Result;
-                ShowResult($"ChangeLink result -> {response.Content.ReadAsStringAsync().Result}");
+                ShowHttpStatus(response.StatusCode);
             }
         }
     }
@@ -189,7 +188,7 @@ namespace LinkHolderConsole {
                 var content = new StringContent(dataAsString);
                 content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
                 var response = client.PutAsync(APP_PATH + "api/values/folder/" + id, content).Result;
-                ShowResult($"ChangeFolder result -> {response.Content.ReadAsStringAsync().Result}");
+                ShowHttpStatus(response.StatusCode);
             }
         }
     }
@@ -198,9 +197,12 @@ namespace LinkHolderConsole {
             using (var client = CreateClient(Commands.Token)) {
                 var response = client.GetAsync(APP_PATH + "api/admin").Result;
                 var content = response.Content.ReadAsStringAsync().Result;
-                IEnumerable<ViewUserModel> users = 
-                    JsonConvert.DeserializeObject<IEnumerable<ViewUserModel>>(content);
-                ShowUser(users);
+                ShowHttpStatus(response.StatusCode);
+                if(response.IsSuccessStatusCode) {
+                    IEnumerable<ViewUserModel> users = 
+                        JsonConvert.DeserializeObject<IEnumerable<ViewUserModel>>(content);
+                    ShowUser(users);
+                }
             }
         }
         private void ShowUser(IEnumerable<ViewUserModel> users) {
