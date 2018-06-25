@@ -216,9 +216,24 @@ namespace LinkHolderConsole {
             Console.ResetColor();
         }
     }
+    internal sealed class Help : Commands {
+        private String commandsString;
+        public Help(String commandsString) {
+            this.commandsString = commandsString;
+        }
+        public override void Run() {
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.WriteLine("List of the commands:");
+            Console.ForegroundColor = ConsoleColor.DarkGreen;
+            Console.WriteLine(commandsString);
+            Console.ResetColor();
+        }
+    }
     internal sealed class Exit : Commands {
         public override void Run() {
-           
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.WriteLine("Bye-bye!");
+            Console.ResetColor();
         }
     }
 }
