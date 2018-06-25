@@ -30,12 +30,16 @@ namespace LinkHolderConsole {
             Console.ResetColor();
         }
         protected void ShowHttpStatus(HttpStatusCode status){
+            Console.Write("HTTP Status -> ");
             switch(status){
                 case HttpStatusCode.Unauthorized : 
                     ShowResult("Please login! (Unauthorized)");
                 break;
                 case HttpStatusCode.Forbidden :
                     ShowResult("Access denied! (Forbidden)");
+                break;
+                case HttpStatusCode.BadRequest :
+                    ShowResult("The server cannot process the request ! (BadRequest)");
                 break;
                 default : 
                     ShowResult(status.ToString());
@@ -216,6 +220,35 @@ namespace LinkHolderConsole {
                 Console.WriteLine("----------------------------");
             }
             Console.ResetColor();
+        }
+    }
+    internal sealed class CreateUser : Commands {
+        public override void Run() {
+            CreateUserModel user = new CreateUserModel();
+            Console.Write("Name: ");
+            user.Name = Console.ReadLine();
+            Console.Write("Email: ");
+            user.Email = Console.ReadLine();
+            Console.Write("Password: ");
+            user.Password = Console.ReadLine();
+            using (var client = CreateClient(Commands.Token)) {
+                var dataAsString = JsonConvert.SerializeObject(user);
+                var content = new StringContent(dataAsString);
+                content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+                var response = client.PostAsync(APP_PATH + "api/admin",content).Result;
+                ShowHttpStatus(response.StatusCode);
+                ShowResult(response.Content.ToString());
+            }
+        }
+    }
+    internal sealed class DeleteUser : Commands {
+        public override void Run() {
+            Console.Write("Id: ");
+            String id = Console.ReadLine();
+            using (var client = CreateClient(Commands.Token)) {
+                var response = client.DeleteAsync(APP_PATH + "api/admin/" + id).Result;
+                ShowHttpStatus(response.StatusCode);
+            }
         }
     }
     internal sealed class Help : Commands {

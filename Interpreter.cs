@@ -16,6 +16,8 @@ namespace LinkHolderConsole {
                 {"lchange", new ChangeLink()},
                 {"fchange", new ChangeFolder()},
                 {"ushow", new ShowUsers()},
+                {"ucreate", new CreateUser()},
+                {"udelete", new DeleteUser()},
                 {"exit", new Exit()}
             };
             String commandsString = "help ";
