@@ -5,7 +5,6 @@ namespace LinkHolderConsole {
     internal sealed class Interpreter {
         private String[] words;
         private Dictionary<String, Commands> commandDictionary;
-        private static String token;
         public Interpreter() {
             commandDictionary = new Dictionary<String, Commands> {
                 {"register", new Register()},
@@ -42,11 +41,7 @@ namespace LinkHolderConsole {
                 Console.ResetColor();
                 return;
             }
-            if(words[0].Equals("login")) {
-                token = commandDictionary["login"].Run("");
-            } else {
-                commandDictionary[words[0]].Run(token);
-            }
+            commandDictionary[words[0]].Run();
         }
     }
 }

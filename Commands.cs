@@ -8,7 +8,8 @@ using Newtonsoft.Json;
 
 namespace LinkHolderConsole {
     internal abstract class Commands {
-        public abstract String Run(String token);
+        public static String Token {get; set;}
+        public abstract void Run();
         public const string APP_PATH= "http://localhost:5000/";
         public HttpClient CreateClient(string accessToken = "") {
             var client = new HttpClient();
@@ -19,7 +20,8 @@ namespace LinkHolderConsole {
             return client;
         }
         protected void ShowResult(String result){
-            if(result.IndexOf(" successfully ") == -1) {
+            if(result.IndexOf(" successfully ") == -1 &&
+               result.IndexOf("OK") == -1) {
                 Console.ForegroundColor = ConsoleColor.DarkRed;
             } else {
                 Console.ForegroundColor = ConsoleColor.DarkYellow;
@@ -42,12 +44,13 @@ namespace LinkHolderConsole {
         }
     }
     internal sealed class Login : Commands {
-        public override String Run(String token) {
+        public override void Run() {
             //Console.WriteLine("Enter the email:");
-            String userName = "bob@example.com";
+            String userName = "admin@example.com";
             //Console.WriteLine("Enter the password:");
             String password = "Secret123$";
-            return GetToken(userName, password);
+
+            Commands.Token = GetToken(userName, password);
         }
         private String GetToken(string userName, string password) {
             var pairs = new List<KeyValuePair<string, string>> {
@@ -72,7 +75,7 @@ namespace LinkHolderConsole {
         }
     }
     internal sealed class Register : Commands {
-        public override String Run(String token) {
+        public override void Run() {
             CreateUserModel user = new CreateUserModel();
             Console.Write("Name: ");
             user.Name = Console.ReadLine();
@@ -85,24 +88,22 @@ namespace LinkHolderConsole {
                 var content = new StringContent(dataAsString);
                 content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
                 var response = client.PostAsync(APP_PATH + "api/account/register",content).Result;
-                ShowResult($"Register result -> {response.Content.ReadAsStringAsync().Result}");
+                ShowHttpStatus(response.StatusCode);
             }
-            return "";
         }
     }
     internal sealed class GetValue : Commands {
-        public override String Run(String token) {
-            using (var client = CreateClient(token)) {
+        public override void Run() {
+            using (var client = CreateClient(Commands.Token)) {
                 var response = client.GetAsync(APP_PATH + "api/values").Result;
                 var content = response.Content.ReadAsStringAsync().Result;
+                ShowHttpStatus(response.StatusCode);
                 if(!response.IsSuccessStatusCode) {
-                    ShowHttpStatus(response.StatusCode);
-                    return "";
+                    return;
                 }
                 IEnumerable<ViewFolderModel> folder = 
                     JsonConvert.DeserializeObject<IEnumerable<ViewFolderModel>>(content);
                 ShowFolder(folder);
-                return response.Content.ReadAsStringAsync().Result;
             }
         }
         private void ShowFolder(IEnumerable<ViewFolderModel> folder){
@@ -122,7 +123,7 @@ namespace LinkHolderConsole {
         }
     }
     internal sealed class SaveLink : Commands {
-        public override String Run(string token) {
+        public override void Run() {
             SaveLinkModel link = new SaveLinkModel();
             Console.Write("Body: ");
             link.LinkBody = Console.ReadLine();
@@ -130,40 +131,37 @@ namespace LinkHolderConsole {
             link.LinkDescription = Console.ReadLine();
             Console.Write("Folder Name: ");
             link.FolderName = Console.ReadLine();
-            using (var client = CreateClient(token)) {
+            using (var client = CreateClient(Commands.Token)) {
                 var dataAsString = JsonConvert.SerializeObject(link);
                 var content = new StringContent(dataAsString);
                 content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
                 var response = client.PostAsync(APP_PATH + "api/values", content).Result;
                 ShowResult($"SaveLink result -> {response.Content.ReadAsStringAsync().Result}");
             }
-            return "";
         }
     }
     internal sealed class DeleteLink : Commands {
-        public override String Run(String token) {
+        public override void Run() {
             Console.Write("Id: ");
             String id = Console.ReadLine();
-            using (var client = CreateClient(token)) {
+            using (var client = CreateClient(Commands.Token)) {
                 var response = client.DeleteAsync(APP_PATH + "api/values/link/" + id).Result;
                 ShowResult($"Value result -> {response.Content.ReadAsStringAsync().Result}");
-                return response.Content.ReadAsStringAsync().Result;
             }
         }
     }
     internal sealed class DeleteFolder : Commands {
-        public override String Run(String token) {
+        public override void Run() {
             Console.Write("Id: ");
             String id = Console.ReadLine();
-            using (var client = CreateClient(token)) {
+            using (var client = CreateClient(Commands.Token)) {
                 var response = client.DeleteAsync(APP_PATH + "api/values/folder/" + id).Result;
                 ShowResult($"Value result -> {response.Content.ReadAsStringAsync().Result}");
-                return response.Content.ReadAsStringAsync().Result;
             }
         }
     }
     internal sealed class ChangeLink : Commands {
-        public override String Run(String token) {
+        public override void Run() {
             SaveLinkModel link = new SaveLinkModel();
             Console.Write("Id: ");
             String id = Console.ReadLine();
@@ -171,41 +169,38 @@ namespace LinkHolderConsole {
             link.LinkBody = Console.ReadLine();
             Console.Write("Description: ");
             link.LinkDescription = Console.ReadLine();
-            using (var client = CreateClient(token)) {
+            using (var client = CreateClient(Commands.Token)) {
                 var dataAsString = JsonConvert.SerializeObject(link);
                 var content = new StringContent(dataAsString);
                 content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
                 var response = client.PutAsync(APP_PATH + "api/values/link/" + id, content).Result;
                 ShowResult($"ChangeLink result -> {response.Content.ReadAsStringAsync().Result}");
             }
-            return "";
         }
     }
     internal sealed class ChangeFolder : Commands {
-        public override String Run(String token) {
+        public override void Run() {
             Console.Write("Id: ");
             String id = Console.ReadLine();
             Console.Write("Name: ");
             String name = Console.ReadLine();
-            using (var client = CreateClient(token)) {
+            using (var client = CreateClient(Commands.Token)) {
                 var dataAsString = JsonConvert.SerializeObject(name);
                 var content = new StringContent(dataAsString);
                 content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
                 var response = client.PutAsync(APP_PATH + "api/values/folder/" + id, content).Result;
                 ShowResult($"ChangeFolder result -> {response.Content.ReadAsStringAsync().Result}");
             }
-            return "";
         }
     }
     internal sealed class ShowUsers : Commands {
-        public override String Run(String token) {
-            using (var client = CreateClient(token)) {
+        public override void Run() {
+            using (var client = CreateClient(Commands.Token)) {
                 var response = client.GetAsync(APP_PATH + "api/admin").Result;
                 var content = response.Content.ReadAsStringAsync().Result;
                 IEnumerable<ViewUserModel> users = 
                     JsonConvert.DeserializeObject<IEnumerable<ViewUserModel>>(content);
                 ShowUser(users);
-                return response.Content.ReadAsStringAsync().Result;
             }
         }
         private void ShowUser(IEnumerable<ViewUserModel> users) {
@@ -222,8 +217,8 @@ namespace LinkHolderConsole {
         }
     }
     internal sealed class Exit : Commands {
-        public override String Run(String token) {
-           return "exit";
+        public override void Run() {
+           
         }
     }
 }
