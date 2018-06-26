@@ -237,7 +237,7 @@ namespace LinkHolderConsole {
                 content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
                 var response = client.PostAsync(APP_PATH + "api/admin",content).Result;
                 ShowHttpStatus(response.StatusCode);
-                ShowResult(response.Content.ToString());
+                ShowResult(response.Content.ReadAsStringAsync().Result);
             }
         }
     }
@@ -248,6 +248,7 @@ namespace LinkHolderConsole {
             using (var client = CreateClient(Commands.Token)) {
                 var response = client.DeleteAsync(APP_PATH + "api/admin/" + id).Result;
                 ShowHttpStatus(response.StatusCode);
+                ShowResult(response.Content.ReadAsStringAsync().Result);
             }
         }
     }
