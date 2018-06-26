@@ -252,6 +252,27 @@ namespace LinkHolderConsole {
             }
         }
     }
+    internal sealed class ChangeUser : Commands {
+        public override void Run() {
+            EditUserModel user = new EditUserModel();
+            Console.Write("Id: ");
+            String id = Console.ReadLine();
+            Console.Write("Email: ");
+            user.Email = Console.ReadLine();
+            Console.Write("Name: ");
+            user.Name = Console.ReadLine();
+            Console.Write("Password: ");
+            user.Password = Console.ReadLine();
+            using (var client = CreateClient(Commands.Token)) {
+                var dataAsString = JsonConvert.SerializeObject(user);
+                var content = new StringContent(dataAsString);
+                content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+                var response = client.PutAsync(APP_PATH + "api/admin/" + id, content).Result;
+                ShowHttpStatus(response.StatusCode);
+                ShowResult(response.Content.ReadAsStringAsync().Result);
+            }
+        }
+    }
     internal sealed class Help : Commands {
         private String commandsString;
         public Help(String commandsString) {
