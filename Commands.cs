@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
@@ -94,6 +95,26 @@ namespace LinkHolderConsole {
                 var response = client.PostAsync(APP_PATH + "api/account/register",content).Result;
                 ShowHttpStatus(response.StatusCode);
             }
+        }
+    }
+    internal sealed class Help : Commands {
+        private String commandsString;
+        public Help(String commandsString) {
+            this.commandsString = commandsString;
+        }
+        public override void Run() {
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.WriteLine("List of the commands:");
+            Console.ForegroundColor = ConsoleColor.DarkGreen;
+            Console.WriteLine(commandsString);
+            Console.ResetColor();
+        }
+    }
+    internal sealed class Exit : Commands {
+        public override void Run() {
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.WriteLine("Bye-bye!");
+            Console.ResetColor();
         }
     }
     internal sealed class GetValue : Commands {
@@ -257,10 +278,10 @@ namespace LinkHolderConsole {
             EditUserModel user = new EditUserModel();
             Console.Write("Id: ");
             String id = Console.ReadLine();
-            Console.Write("Email: ");
-            user.Email = Console.ReadLine();
             Console.Write("Name: ");
             user.Name = Console.ReadLine();
+            Console.Write("Email: ");
+            user.Email = Console.ReadLine();
             Console.Write("Password: ");
             user.Password = Console.ReadLine();
             using (var client = CreateClient(Commands.Token)) {
@@ -273,23 +294,40 @@ namespace LinkHolderConsole {
             }
         }
     }
-    internal sealed class Help : Commands {
-        private String commandsString;
-        public Help(String commandsString) {
-            this.commandsString = commandsString;
-        }
+    internal sealed class ShowRoles : Commands {
         public override void Run() {
-            Console.ForegroundColor = ConsoleColor.DarkYellow;
-            Console.WriteLine("List of the commands:");
-            Console.ForegroundColor = ConsoleColor.DarkGreen;
-            Console.WriteLine(commandsString);
-            Console.ResetColor();
+            using (var client = CreateClient(Commands.Token)) {
+                var roleResponse = client.GetAsync(APP_PATH + "api/roleadmin").Result;
+                var userResponse = client.GetAsync(APP_PATH + "api/admin").Result;
+                var roleContent = roleResponse.Content.ReadAsStringAsync().Result;
+                var userContent = userResponse.Content.ReadAsStringAsync().Result;
+                ShowHttpStatus(roleResponse.StatusCode);
+                if(roleResponse.IsSuccessStatusCode && userResponse.IsSuccessStatusCode) {
+                    IEnumerable<RoleModificationModel> roles = 
+                        JsonConvert.DeserializeObject<IEnumerable<RoleModificationModel>>(roleContent);
+                    IEnumerable<ViewUserModel> users = 
+                        JsonConvert.DeserializeObject<IEnumerable<ViewUserModel>>(userContent);
+                    ShowRole(roles, users);
+                }
+            }
         }
-    }
-    internal sealed class Exit : Commands {
-        public override void Run() {
+        private void ShowRole(IEnumerable<RoleModificationModel> roles,
+                                IEnumerable<ViewUserModel> users) {
             Console.ForegroundColor = ConsoleColor.DarkYellow;
-            Console.WriteLine("Bye-bye!");
+            Console.WriteLine("================================================================");
+            Console.WriteLine($"ID\t\t\t\t\tNAME\t\t MEMBERS");
+            Console.WriteLine("================================================================");
+            foreach(RoleModificationModel r in roles) {
+                Console.ForegroundColor = ConsoleColor.DarkGreen;
+                Console.Write($"{r.RoleId}\t{r.RoleName}\t");
+                foreach(String id in r.IdsToAdd) {
+                    var user = users.Select(u => u)
+                                    .Where(u => u.Id.Equals(id)).FirstOrDefault();
+                    Console.Write($"/{user.Name}");
+                }
+                Console.WriteLine();
+                Console.WriteLine("----------------------------");
+            }
             Console.ResetColor();
         }
     }
