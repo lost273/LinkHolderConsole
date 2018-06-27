@@ -345,4 +345,15 @@ namespace LinkHolderConsole {
             }
         }
     }
+    internal sealed class DeleteRole : Commands {
+        public override void Run() {
+            Console.Write("Id: ");
+            String id = Console.ReadLine();
+            using (var client = CreateClient(Commands.Token)) {
+                var response = client.DeleteAsync(APP_PATH + "api/roleadmin/" + id).Result;
+                ShowHttpStatus(response.StatusCode);
+                ShowResult(response.Content.ReadAsStringAsync().Result);
+            }
+        }
+    }
 }
