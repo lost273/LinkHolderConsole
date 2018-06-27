@@ -331,4 +331,18 @@ namespace LinkHolderConsole {
             Console.ResetColor();
         }
     }
+    internal sealed class CreateRole : Commands {
+        public override void Run() {
+            Console.Write("Name: ");
+            String name = Console.ReadLine();
+            using (var client = CreateClient(Commands.Token)) {
+                var dataAsString = JsonConvert.SerializeObject(name);
+                var content = new StringContent(dataAsString);
+                content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+                var response = client.PostAsync(APP_PATH + "api/roleadmin", content).Result;
+                ShowHttpStatus(response.StatusCode);
+                ShowResult(response.Content.ReadAsStringAsync().Result);
+            }
+        }
+    }
 }

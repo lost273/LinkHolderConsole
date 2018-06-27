@@ -20,6 +20,7 @@ namespace LinkHolderConsole {
                 {"udelete", new DeleteUser()},
                 {"uchange", new ChangeUser()},
                 {"rshow", new ShowRoles()},
+                {"rcreate", new CreateRole()},
                 {"exit", new Exit()}
             };
             String commandsString = "help ";
