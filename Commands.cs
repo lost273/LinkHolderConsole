@@ -94,6 +94,7 @@ namespace LinkHolderConsole {
                 content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
                 var response = client.PostAsync(APP_PATH + "api/account/register",content).Result;
                 ShowHttpStatus(response.StatusCode);
+                ShowResult(response.Content.ReadAsStringAsync().Result);
             }
         }
     }
@@ -353,6 +354,33 @@ namespace LinkHolderConsole {
                 var response = client.DeleteAsync(APP_PATH + "api/roleadmin/" + id).Result;
                 ShowHttpStatus(response.StatusCode);
                 ShowResult(response.Content.ReadAsStringAsync().Result);
+            }
+        }
+    }
+    internal sealed class ChangeRole : Commands {
+        public override void Run() {
+            RoleModificationModel model = new RoleModificationModel();
+            Console.Write("User Id: ");
+            String id = Console.ReadLine();
+            Console.Write("Role Name: ");
+            model.RoleName = Console.ReadLine();
+            Console.Write("del or add: ");
+            String choice = Console.ReadLine();
+            if(choice.Equals("del")){
+                model.IdsToDelete = new string[]{id};
+            } else {
+                model.IdsToAdd = new string[]{id};
+            }
+
+            using (var client = CreateClient(Commands.Token)) {
+                var dataAsString = JsonConvert.SerializeObject(model);
+                var content = new StringContent(dataAsString);
+                content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+                var response = client.PutAsync(APP_PATH + "api/roleadmin", content).Result;
+                ShowHttpStatus(response.StatusCode);
+                if (response.IsSuccessStatusCode) {
+                    ShowResult(response.Content.ReadAsStringAsync().Result);
+                }
             }
         }
     }

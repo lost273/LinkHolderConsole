@@ -22,6 +22,7 @@ namespace LinkHolderConsole {
                 {"rshow", new ShowRoles()},
                 {"rcreate", new CreateRole()},
                 {"rdelete", new DeleteRole()},
+                {"rchange", new ChangeRole()},
                 {"exit", new Exit()}
             };
             String commandsString = "help ";
@@ -36,7 +37,13 @@ namespace LinkHolderConsole {
         }
         public void CommandRun () {
             if(commandDictionary.ContainsKey(words[0])) {
-                commandDictionary[words[0]].Run();
+                try {
+                    commandDictionary[words[0]].Run();
+                }
+                catch(AggregateException e) {
+                    Console.WriteLine($"{e.Message}");
+                    return;
+                }
             } else {
                 Console.ForegroundColor = ConsoleColor.DarkRed;
                 Console.WriteLine("We don't have this command yet.");
